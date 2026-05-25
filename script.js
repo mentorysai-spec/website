@@ -266,4 +266,40 @@ if ('IntersectionObserver' in window) {
     });
 }
 
+// Karpathy Skills Plugin
+const filterBtns = document.querySelectorAll('.filter-btn');
+const skillCards = document.querySelectorAll('.skill-card');
+
+filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const filter = btn.dataset.filter;
+        skillCards.forEach(card => {
+            if (filter === 'all' || card.dataset.category === filter) {
+                card.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+    });
+});
+
+// Animate skill progress bars on scroll
+const skillsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.querySelectorAll('.progress-bar').forEach(bar => {
+                bar.style.width = bar.dataset.width + '%';
+            });
+            skillsObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.2 });
+
+document.querySelectorAll('.skill-card').forEach(card => {
+    skillsObserver.observe(card);
+});
+
 console.log('Mentorys.ai website loaded successfully!');
